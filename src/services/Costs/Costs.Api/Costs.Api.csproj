@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Shared\PersonalAccounting.Shared.Common\PersonalAccounting.Shared.Common.csproj" />
+    <ProjectReference Include="..\..\..\Shared\PersonalAccounting.Shared.Common\PersonalAccounting.Shared.Common.csproj" />
     <ProjectReference Include="..\Costs.Application\Costs.Application.csproj" />
   </ItemGroup>
 

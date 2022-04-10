@@ -13,17 +13,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonalAccounting.Shared.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonalAccounting.Shared.Api", "src\Shared\PersonalAccounting.Shared.Api\PersonalAccounting.Shared.Api.csproj", "{A66384EF-5050-4E3D-BF70-1864AF9A1133}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{3A15A1C0-4354-4FC8-AF40-E031FDBC0128}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "services", "services", "{3A15A1C0-4354-4FC8-AF40-E031FDBC0128}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Costs", "Costs", "{1DA0A442-84AA-4143-88E4-AFC06CDD9D1F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Costs.Domain", "src\Costs\Costs.Domain\Costs.Domain.csproj", "{AA2F88A7-268A-432F-B014-1CD1CD0A32EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Costs.Domain", "src\services\Costs\Costs.Domain\Costs.Domain.csproj", "{AA2F88A7-268A-432F-B014-1CD1CD0A32EC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Costs.Infrastructure", "src\Costs\Costs.Infrastructure\Costs.Infrastructure.csproj", "{8BE8EAC9-011E-4A16-A94E-FB5079FA15A2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Costs.Infrastructure", "src\services\Costs\Costs.Infrastructure\Costs.Infrastructure.csproj", "{8BE8EAC9-011E-4A16-A94E-FB5079FA15A2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Costs.Application", "src\Costs\Costs.Application\Costs.Application.csproj", "{AB17B062-3173-4892-A507-EC0C9F8531AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Costs.Application", "src\services\Costs\Costs.Application\Costs.Application.csproj", "{AB17B062-3173-4892-A507-EC0C9F8531AD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Costs.Api", "src\Costs\Costs.Api\Costs.Api.csproj", "{2AA32BE1-3AD6-4F6E-9A44-B932E4DDF83E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Costs.Api", "src\services\Costs\Costs.Api\Costs.Api.csproj", "{2AA32BE1-3AD6-4F6E-9A44-B932E4DDF83E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
