@@ -9,7 +9,6 @@
   <ItemGroup>
     <Folder Include="Common\Exceptions\" />
     <Folder Include="Common\Interfaces\" />
-    <Folder Include="Common\Models\" />
   </ItemGroup>
 
   <ItemGroup>
