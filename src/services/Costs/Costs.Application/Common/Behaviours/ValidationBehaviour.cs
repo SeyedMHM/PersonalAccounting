@@ -18,7 +18,7 @@ namespace Costs.Application.Common.Exceptions
             var validationFailures = _validators
                 .Select(validator => validator.Validate(request))
                 .SelectMany(result => result.Errors)
-                 .Where(validationFailure => validationFailure != null)
+                .Where(validationFailure => validationFailure != null)
                 .ToList();
 
             if (validationFailures.Any())

@@ -4,6 +4,10 @@ namespace Costs.Application.CostCategoriesApplication.Commands.DeleteCostCategor
 {
     public class DeleteCostCategoryCommand : IRequest<Unit>
     {
+        public DeleteCostCategoryCommand(int id)
+        {
+            Id = id;
+        }
         public int Id { get; set; }
     }
 }
