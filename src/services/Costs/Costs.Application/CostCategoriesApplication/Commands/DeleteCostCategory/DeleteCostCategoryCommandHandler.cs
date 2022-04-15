@@ -1,4 +1,5 @@
-﻿using Costs.Domain.Entities;
+﻿using AutoMapper;
+using Costs.Domain.Entities;
 using Costs.Infrastructure.Data;
 using MediatR;
 
@@ -7,16 +8,17 @@ namespace Costs.Application.CostCategoriesApplication.Commands.DeleteCostCategor
     public class DeleteCategoryCommandHandler : IRequestHandler<DeleteCostCategoryCommand, Unit>
     {
         private readonly ApplicationDbContext _applicationDbContext;
+        private readonly IMapper _mapper;
 
-        public DeleteCategoryCommandHandler(ApplicationDbContext applicationDbContext)
+        public DeleteCategoryCommandHandler(ApplicationDbContext applicationDbContext, IMapper mapper)
         {
             _applicationDbContext = applicationDbContext;
+            _mapper = mapper;
         }
 
         public async Task<Unit> Handle(DeleteCostCategoryCommand request, CancellationToken cancellationToken)
         {
-            CostCategory costCategory = await _applicationDbContext.CostCategories
-                .FindAsync(new object[] { request.Id }, cancellationToken);
+            CostCategory costCategory = _mapper.Map<CostCategory>(request);
 
             _applicationDbContext.CostCategories.Remove(costCategory);
 

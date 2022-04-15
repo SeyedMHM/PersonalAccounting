@@ -6,5 +6,7 @@ namespace Costs.Application.CostCategoriesApplication.Queries.GetPagedCostCatego
 {
     public class GetPagedCostCategoriesQuery : PagedListMetadata, IRequest<PagedList<GetCostCategoryResponse>>
     {
+        public string? Title { get; set; }
+        public int? ParentId { get; set; }
     }
 }

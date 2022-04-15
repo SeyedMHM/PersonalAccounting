@@ -25,6 +25,11 @@ namespace Costs.Application.CostCategoriesApplication.Commands.UpdateCostCategor
             CostCategory costCategory = await _applicationDbContext.CostCategories
                 .FindAsync(new object[] { request.Id }, cancellationToken);
 
+            if (costCategory is null)
+            {
+                return null;
+            }
+
             _mapper.Map(request, costCategory);
 
             await _applicationDbContext.SaveChangesAsync();

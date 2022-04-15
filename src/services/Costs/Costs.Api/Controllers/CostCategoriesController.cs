@@ -1,14 +1,16 @@
 ﻿using Costs.Api.Filters;
 using Costs.Application.Common.Models;
 using Costs.Application.CostCategoriesApplication.Commands.CreateCostCategory;
-using Costs.Application.CostCategoriesApplication.Commands.DeleteCostCategory;
-using Costs.Application.CostCategoriesApplication.Commands.UpdateCostCategory;
 using Costs.Application.CostCategoriesApplication.Queries.Common;
 using Costs.Application.CostCategoriesApplication.Queries.GetAllCostCategories;
 using Costs.Application.CostCategoriesApplication.Queries.GetCostCategoryById;
 using Costs.Application.CostCategoriesApplication.Queries.GetPagedCostCategories;
+using DeleteCostCategory = Costs.Application.CostCategoriesApplication.Commands.DeleteCostCategory;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using AutoMapper;
+using Costs.Application.CostCategoriesApplication.Commands.DeleteCostCategory;
+using Costs.Application.CostCategoriesApplication.Commands.UpdateCostCategory;
 
 namespace Costs.Api.Controllers
 {
@@ -18,35 +20,52 @@ namespace Costs.Api.Controllers
     public class CostCategoriesController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public CostCategoriesController(IMediator mediator)
+        public CostCategoriesController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
+            _mapper = mapper;
         }
 
 
         [HttpGet]
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
-            List<GetCostCategoryResponse> category = await _mediator.Send(new GetAllCostCategoriesQuery(), cancellationToken);
+            var categories = await _mediator.Send(new GetAllCostCategoriesQuery(), cancellationToken);
 
-            return Ok(category);
+            if (categories.Any())
+            {
+                return Ok(categories);
+            }
+
+            return NotFound();
         }
 
 
         [HttpGet]
         public async Task<IActionResult> GetPagedList([FromQuery] GetPagedCostCategoriesQuery getPagedCostCategoriesQuery, CancellationToken cancellationToken)
         {
-            PagedList<GetCostCategoryResponse> category = await _mediator.Send(getPagedCostCategoriesQuery, cancellationToken);
+            PagedList<GetCostCategoryResponse> categories = await _mediator.Send(getPagedCostCategoriesQuery, cancellationToken);
 
-            return Ok(category);
+            if (categories.TotalCount == 0)
+            {
+                return NotFound();
+            }
+
+            return Ok(categories);
         }
 
 
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] GetCostCategoryByIdQuery input, CancellationToken cancellationToken)
         {
-            GetCostCategoryResponse category = await _mediator.Send(input, cancellationToken);
+            var category = await _mediator.Send(input, cancellationToken);
+
+            if (category is null)
+            {
+                return NotFound();
+            }
 
             return Ok(category);
         }
@@ -66,15 +85,27 @@ namespace Costs.Api.Controllers
         {
             UpdateCostCategoryResponse costCategory = await _mediator.Send(input, cancellationToken);
 
+            if (costCategory is null)
+            {
+                return NotFound();
+            }
+
             return Ok(costCategory);
         }
-
+       
 
         [HttpDelete]
-        public async Task<IActionResult> Delete(DeleteCostCategoryCommand input, CancellationToken cancellationToken)
+        public async Task<IActionResult> Delete(DeleteCostCategory.GetById.GetByIdCommand input, CancellationToken cancellationToken)
         {
-            await _mediator.Send(input, cancellationToken);
+            var costCategory = await _mediator.Send(input, cancellationToken);
+            
+            if (costCategory is null)
+            {
+                return NotFound();
+            }
 
+            await _mediator.Send(new DeleteCostCategoryCommand(costCategory.Id), cancellationToken);
+            
             return Ok();
         }
     }

@@ -25,10 +25,22 @@ namespace Costs.Application.CostCategoriesApplication.Queries.GetPagedCostCatego
 
         public async Task<PagedList<GetCostCategoryResponse>> Handle(GetPagedCostCategoriesQuery request, CancellationToken cancellationToken)
         {
-            var categories = await _applicationDbContext.CostCategories
+            var query = _applicationDbContext.CostCategories
                 .Include(q => q.Parent)
                 .Include(q => q.Children)
-                .AsNoTracking()
+                .AsNoTracking();
+
+            if (request.ParentId is not null)
+            {
+                query = query.Where(q => q.ParentId == request.ParentId);
+            }
+
+            if (!string.IsNullOrEmpty(request.Title))
+            {
+                query = query.Where(q => q.Title.Contains(request.Title));
+            }
+
+            var categories = await query
                 .ToPagedResult<CostCategory, GetCostCategoryResponse>(request, _mapper, cancellationToken);
 
             return categories;
