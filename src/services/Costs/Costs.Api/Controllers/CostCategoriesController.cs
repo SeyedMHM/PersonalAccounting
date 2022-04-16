@@ -20,26 +20,24 @@ namespace Costs.Api.Controllers
     public class CostCategoriesController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly IMapper _mapper;
 
-        public CostCategoriesController(IMediator mediator, IMapper mapper)
+        public CostCategoriesController(IMediator mediator)
         {
             _mediator = mediator;
-            _mapper = mapper;
         }
 
 
         [HttpGet]
-        public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetAll([FromQuery] GetAllCostCategoriesQuery getAllCostCategoriesQuery, CancellationToken cancellationToken)
         {
-            var categories = await _mediator.Send(new GetAllCostCategoriesQuery(), cancellationToken);
+            var categories = await _mediator.Send(getAllCostCategoriesQuery, cancellationToken);
 
-            if (categories.Any())
+            if (categories == null || !categories.Any())
             {
-                return Ok(categories);
+                return NotFound();
             }
 
-            return NotFound();
+            return Ok(categories);
         }
 
 

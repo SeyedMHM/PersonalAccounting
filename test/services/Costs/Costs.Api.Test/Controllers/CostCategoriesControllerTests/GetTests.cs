@@ -7,47 +7,50 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Costs.Api.Test.Controllers.CostCategoriesControllerTests
 {
     public class GetTests
     {
-        [Fact]
-        [Trait("CostCategory", "Get")]
-        public async void When_Call_ActionMethod_Invoke_GetCostCategoryByIdQueryHandler_ExactlyOnce()
+        private readonly Mock<IMediator> _mediator;
+        private readonly CostCategoriesController _costCategoriesController;
+        private readonly GetCostCategoryByIdQuery _getCostCategoryByIdQuery;
+        public GetTests()
         {
-            Mock<IMediator> mockMediator = new Mock<IMediator>();
-            Mock<IMapper> mockMapper = new Mock<IMapper>();
-            CostCategoriesController costCategoriesController = new CostCategoriesController(mockMediator.Object, mockMapper.Object);
-
-            GetCostCategoryByIdQuery getCostCategoryByIdQuery = new GetCostCategoryByIdQuery();
-            getCostCategoryByIdQuery.Id = It.IsAny<int>();
-            mockMediator
-                .Setup(q => q.Send(getCostCategoryByIdQuery, CancellationToken.None))
-                .ReturnsAsync((GetCostCategoryResponse)null);
-
-            IActionResult result = await costCategoriesController.Get(getCostCategoryByIdQuery, CancellationToken.None);
-
-            mockMediator.Verify(handler => handler.Send(getCostCategoryByIdQuery, CancellationToken.None), Times.Once);
+            _mediator = new Mock<IMediator>();
+            _costCategoriesController = new CostCategoriesController(_mediator.Object);
+            _getCostCategoryByIdQuery = new GetCostCategoryByIdQuery()
+            {
+                Id = It.IsAny<int>()
+            };
         }
 
 
         [Fact]
         [Trait("CostCategory", "Get")]
-        public async void When_UnExsitingCostCategory_Return_Status404NotFound()
+        public async Task When_Call_ActionMethod_Invoke_GetCostCategoryByIdQueryHandler_ExactlyOnce()
         {
-            Mock<IMediator> mockMediator = new Mock<IMediator>();
-            Mock<IMapper> mockMapper = new Mock<IMapper>();
-            CostCategoriesController costCategoriesController = new CostCategoriesController(mockMediator.Object, mockMapper.Object);
-
-            GetCostCategoryByIdQuery getCostCategoryByIdQuery = new GetCostCategoryByIdQuery();
-            getCostCategoryByIdQuery.Id = It.IsAny<int>();
-            mockMediator
-                .Setup(q => q.Send(getCostCategoryByIdQuery, CancellationToken.None))
+            _mediator
+                .Setup(q => q.Send(_getCostCategoryByIdQuery, CancellationToken.None))
                 .ReturnsAsync((GetCostCategoryResponse)null);
 
-            IActionResult result = await costCategoriesController.Get(getCostCategoryByIdQuery, CancellationToken.None);
+            IActionResult result = await _costCategoriesController.Get(_getCostCategoryByIdQuery, CancellationToken.None);
+
+            _mediator.Verify(handler => handler.Send(_getCostCategoryByIdQuery, CancellationToken.None), Times.Once);
+        }
+
+
+        [Fact]
+        [Trait("CostCategory", "Get")]
+        public async Task When_UnExsitingCostCategory_Return_Status404NotFound()
+        {
+            _mediator
+                .Setup(q => q.Send(_getCostCategoryByIdQuery, CancellationToken.None))
+                .ReturnsAsync((GetCostCategoryResponse)null);
+
+            IActionResult result = await _costCategoriesController.Get(_getCostCategoryByIdQuery, CancellationToken.None);
 
             var notFoundResult = result as NotFoundResult;
 
@@ -58,27 +61,20 @@ namespace Costs.Api.Test.Controllers.CostCategoriesControllerTests
 
         [Fact]
         [Trait("CostCategory", "Get")]
-        public async void When_ExsitingCostCategory_Return_Status200OK()
+        public async Task When_ExsitingCostCategory_Return_Status200OK()
         {
-            Mock<IMediator> mockMediator = new Mock<IMediator>();
-            Mock<IMapper> mockMapper = new Mock<IMapper>();
-            CostCategoriesController costCategoriesController = new CostCategoriesController(mockMediator.Object, mockMapper.Object);
-
-            GetCostCategoryByIdQuery getCostCategoryByIdQuery = new GetCostCategoryByIdQuery();
-            getCostCategoryByIdQuery.Id = It.IsAny<int>();
-            mockMediator
-                .Setup(q => q.Send(getCostCategoryByIdQuery, CancellationToken.None))
+            _mediator
+                .Setup(q => q.Send(_getCostCategoryByIdQuery, CancellationToken.None))
                 .ReturnsAsync(new GetCostCategoryResponse()
                 {
                     Id = 1,
                     Title = "category A"
                 });
 
-            IActionResult result = await costCategoriesController.Get(getCostCategoryByIdQuery, CancellationToken.None);
+            IActionResult result = await _costCategoriesController.Get(_getCostCategoryByIdQuery, CancellationToken.None);
 
             var okObjectResult = result as OkObjectResult;
 
-            // assert
             Assert.NotNull(okObjectResult);
             Assert.Equal(StatusCodes.Status200OK, okObjectResult.StatusCode);
         }

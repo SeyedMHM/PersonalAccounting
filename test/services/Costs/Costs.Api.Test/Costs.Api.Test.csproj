@@ -25,4 +25,10 @@
     <ProjectReference Include="..\..\..\..\src\services\Costs\Costs.Api\Costs.Api.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Fixtures\CostCategories.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
