@@ -46,7 +46,7 @@ namespace Costs.Api.Controllers
         {
             PagedList<GetCostCategoryResponse> categories = await _mediator.Send(getPagedCostCategoriesQuery, cancellationToken);
 
-            if (categories.TotalCount == 0)
+            if (categories == null || categories.TotalCount == 0)
             {
                 return NotFound();
             }

@@ -61,7 +61,7 @@ namespace Costs.Api.Test.Controllers.CostCategoriesControllerTests
 
         [Fact]
         [Trait("CostCategory", "GetAll")]
-        public async Task When_ExistingPeople_ReturnsAllPeople()
+        public async Task When_ExistingCostCategories_ReturnsAllExistingCostCategories()
         {
             _mediator
                 .Setup(q => q.Send(_getAllCostCategoriesQuery, CancellationToken.None))
