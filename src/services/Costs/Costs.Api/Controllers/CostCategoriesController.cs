@@ -30,6 +30,19 @@ namespace Costs.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] GetAllCostCategoriesQuery getAllCostCategoriesQuery, CancellationToken cancellationToken)
         {
+            PagedList<GetAllCostCategoriesQuery> b = new PagedList<GetAllCostCategoriesQuery>();
+            b.CurrentPage = 1;
+            b.TotalCount = int.MaxValue;
+            b.PageSize = 1;
+
+            PagedList<GetAllCostCategoriesQuery> a = new PagedList<GetAllCostCategoriesQuery>()
+            {
+                CurrentPage = 1,
+                TotalCount = int.MaxValue,
+                PageSize = 1,
+            };
+
+
             var categories = await _mediator.Send(getAllCostCategoriesQuery, cancellationToken);
 
             if (categories == null || !categories.Any())

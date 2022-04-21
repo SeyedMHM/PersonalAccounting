@@ -29,7 +29,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "services", "services", "{A9
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Costs", "Costs", "{64D95A2D-0BFA-499E-B3D1-9B90F175BFAD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Costs.Api.Test", "test\services\Costs\Costs.Api.Test\Costs.Api.Test.csproj", "{64A4AEC9-CF71-4978-8EE7-6B9356681F12}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Costs.Api.Test", "test\services\Costs\Costs.Api.Test\Costs.Api.Test.csproj", "{64A4AEC9-CF71-4978-8EE7-6B9356681F12}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Costs.Application.Test", "test\services\Costs\Costs.Application.Test\Costs.Application.Test.csproj", "{28D4ABAA-0D6E-48CC-8AB9-E272FBF54CEF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -65,6 +67,10 @@ Global
 		{64A4AEC9-CF71-4978-8EE7-6B9356681F12}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64A4AEC9-CF71-4978-8EE7-6B9356681F12}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64A4AEC9-CF71-4978-8EE7-6B9356681F12}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28D4ABAA-0D6E-48CC-8AB9-E272FBF54CEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28D4ABAA-0D6E-48CC-8AB9-E272FBF54CEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28D4ABAA-0D6E-48CC-8AB9-E272FBF54CEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28D4ABAA-0D6E-48CC-8AB9-E272FBF54CEF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -82,6 +88,7 @@ Global
 		{A9344004-16CF-40B7-84B7-47F3FE0C492E} = {BC1B1215-3C09-4A15-A25B-A2A3AF8043ED}
 		{64D95A2D-0BFA-499E-B3D1-9B90F175BFAD} = {A9344004-16CF-40B7-84B7-47F3FE0C492E}
 		{64A4AEC9-CF71-4978-8EE7-6B9356681F12} = {64D95A2D-0BFA-499E-B3D1-9B90F175BFAD}
+		{28D4ABAA-0D6E-48CC-8AB9-E272FBF54CEF} = {64D95A2D-0BFA-499E-B3D1-9B90F175BFAD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5BF22C3F-0395-472B-8275-A29AF354C531}

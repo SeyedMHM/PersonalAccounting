@@ -3,21 +3,6 @@
     public class PagedList<TModel>
     {
         public int TotalCount { get; set; }
-        public int PageSize { get; set; }
-        public int CurrentPage { get; set; }
-        public int TotalPages => (int)Math.Ceiling((decimal)TotalCount / PageSize);
-        public bool HasPrevious => CurrentPage > 1;
-        public bool HasNext => CurrentPage < TotalPages;
-
-        public List<TModel> Items { get; set; } = new List<TModel>();
-    }
-
-
-    public class PagedListMetadata
-    {
-        private int _maxPageSize = 50;
-        private int _normalPageSize = 5;
-        private int _minPageSize = 1;
 
 
         private int _pageSize;
@@ -25,41 +10,52 @@
         {
             get
             {
-                if (_pageSize > _maxPageSize)
+                if (_pageSize < 1)
                 {
-                    _pageSize = _maxPageSize;
+                    throw new ArgumentException("مقدار 'تعداد در هر صفحه' نمی تواند کمتر از '1' باشد");
                 }
-                else if (_pageSize == 0)
-                {
-                    _pageSize = _normalPageSize;
-                }
-                else if (_pageSize < _minPageSize)
-                {
-                    _pageSize = _minPageSize;
-                }
+
                 return _pageSize;
             }
-            set
-            {
+            set 
+            { 
+                
                 _pageSize = value;
             }
         }
 
-        private int _pageId;
-        public int PageId
+
+        private int _currentPage;
+        public int CurrentPage
         {
             get
             {
-                if (_pageId < 1)
+                if (_currentPage < 1)
                 {
-                    _pageId = 1;
+                    throw new ArgumentException("مقدار 'شماره صفحه' نمی تواند کمتر از '1' باشد");
                 }
-                return _pageId;
+
+                if (_currentPage > TotalPages)
+                {
+                    throw new ArgumentException("مقدار 'شماره صفحه' نمی تواند بیش تر از 'تعداد صفحات' باشد");
+                }
+
+                return _currentPage;
             }
-            set
-            {
-                _pageId = value;
+            set {
+
+                
+                _currentPage = value;
             }
         }
+
+
+        public int TotalPages => (int)Math.Ceiling((decimal)TotalCount / PageSize);
+
+        public bool HasPrevious => CurrentPage > 1;
+
+        public bool HasNext => CurrentPage < TotalPages;
+
+        public List<TModel> Items { get; set; } = new List<TModel>();
     }
 }
