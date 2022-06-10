@@ -1,29 +1,27 @@
 ﻿using Costs.Api.Controllers;
 using Costs.Api.Test.Fixtures;
 using Costs.Application.Common.Models;
-using Costs.Application.CostCategoriesApplication.Queries.Common;
-using Costs.Application.CostCategoriesApplication.Queries.GetPagedCostCategories;
+using Costs.Application.Features.CostCategoryFeatures.Queries.Common;
+using Costs.Application.Features.CostCategoryFeatures.Queries.GetPagedCostCategories;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Costs.Api.Test.Controllers.CostCategoriesControllerTests
 {
-    public class GetPagedListTest
+    public class GetPagedListTests
     {
         private readonly Mock<IMediator> _mediator;
         private readonly CostCategoriesController _costCategoriesController;
         private readonly GetPagedCostCategoriesQuery _getPagedCostCategoriesQuery;
 
-        public GetPagedListTest()
+        public GetPagedListTests()
         {
             _mediator = new Mock<IMediator>();
             _costCategoriesController = new CostCategoriesController(_mediator.Object);
@@ -32,7 +30,7 @@ namespace Costs.Api.Test.Controllers.CostCategoriesControllerTests
 
 
         [Fact]
-        [Trait("CostCategory", "GetPagedList")]
+        [Trait("CostCategory", "CostCategoriesController")]
         public async Task When_Call_ActionMethod_Invoke_GetPagedCostCategoriesQueryHandler_ExactlyOnce()
         {
             _mediator
@@ -48,7 +46,7 @@ namespace Costs.Api.Test.Controllers.CostCategoriesControllerTests
 
 
         [Fact]
-        [Trait("CostCategory", "GetPagedList")]
+        [Trait("CostCategory", "CostCategoriesController")]
         public async Task When_ExistingCostCategories_Return_Status200OK()
         {
             //10 Items
@@ -77,15 +75,20 @@ namespace Costs.Api.Test.Controllers.CostCategoriesControllerTests
 
 
         [Fact]
-        [Trait("CostCategory", "GetPagedList")]
-        public async Task When_ExistingCostCategories_ReturnsAllExistingCostCategories()
+        [Trait("CostCategory", "CostCategoriesController")]
+        public async Task When_ExistingCostCategories_Return_ExactlyExistingCostCategories()
         {
             //10 Items
-            List<GetCostCategoryResponse> costCategories = await CostCategoryFixture.GetAllCostCategoriesTest();
-
-            PagedList<GetCostCategoryResponse> pagedListResult = new PagedList<GetCostCategoryResponse>()
+            PagedList<GetCostCategoryResponse> fixturePagedListResult = new PagedList<GetCostCategoryResponse>()
             {
-                Items = costCategories,
+                Items = await CostCategoryFixture.GetAllCostCategoriesTest(),
+                CurrentPage = 1,
+                PageSize = 5,
+                TotalCount = 10
+            };
+            PagedList<GetCostCategoryResponse> fixturePagedResultAfterReturnFromController = new PagedList<GetCostCategoryResponse>()
+            {
+                Items = await CostCategoryFixture.GetAllCostCategoriesTest(),
                 CurrentPage = 1,
                 PageSize = 5,
                 TotalCount = 10
@@ -93,7 +96,7 @@ namespace Costs.Api.Test.Controllers.CostCategoriesControllerTests
 
             _mediator
                 .Setup(q => q.Send(_getPagedCostCategoriesQuery, CancellationToken.None))
-                .ReturnsAsync(pagedListResult);
+                .ReturnsAsync(fixturePagedResultAfterReturnFromController);
 
             IActionResult result = await _costCategoriesController
                 .GetPagedList(_getPagedCostCategoriesQuery, CancellationToken.None);
@@ -102,11 +105,25 @@ namespace Costs.Api.Test.Controllers.CostCategoriesControllerTests
 
             Assert.NotNull(result);
             Assert.IsType(typeof(PagedList<GetCostCategoryResponse>), okObjectResult.Value);
+            Assert.Equal(JsonSerializer.Serialize(fixturePagedListResult.Items), JsonSerializer.Serialize(fixturePagedResultAfterReturnFromController.Items));
+
+            //Assert.True(
+            //   fixturePagedListResult.Items
+            //   .All(shouldItem => fixturePagedResultAfterReturnFromController.Items.Any(isItem => isItem == shouldItem))
+            //);
+            //Assert.Equal(fixturePagedListResult.HasPrevious, fixturePagedResultAfterReturnFromController.HasPrevious);
+            //Assert.Equal(fixturePagedListResult.HasNext, fixturePagedResultAfterReturnFromController.HasNext);
+            //Assert.Equal(fixturePagedListResult.TotalCount, fixturePagedResultAfterReturnFromController.TotalCount);
+            //Assert.Equal(fixturePagedListResult.CurrentPage, fixturePagedResultAfterReturnFromController.CurrentPage);
+            //Assert.Equal(fixturePagedListResult.HasNext, fixturePagedResultAfterReturnFromController.HasNext);
+            //Assert.Equal(fixturePagedListResult.PageSize, fixturePagedResultAfterReturnFromController.PageSize);
+            //Assert.Equal(fixturePagedListResult.TotalPages, fixturePagedResultAfterReturnFromController.TotalPages);
+
         }
 
 
         [Fact]
-        [Trait("CostCategory", "GetPagedList")]
+        [Trait("CostCategory", "CostCategoriesController")]
         public async Task When_IsEmptyCostCategories_Return_Status404NotFound()
         {
             //10 Items
@@ -135,13 +152,13 @@ namespace Costs.Api.Test.Controllers.CostCategoriesControllerTests
 
 
         [Fact]
-        [Trait("CostCategory", "GetPagedList")]
+        [Trait("CostCategory", "CostCategoriesController")]
         public async Task When_IsNullCostCategories_Return_Status404NotFound()
         {
             //10 Items
             List<GetCostCategoryResponse> costCategories = new List<GetCostCategoryResponse>();
 
-            PagedList<GetCostCategoryResponse> pagedListResult = null;
+            PagedList<GetCostCategoryResponse> pagedListResult = new();
 
             _mediator
                 .Setup(q => q.Send(_getPagedCostCategoriesQuery, CancellationToken.None))
@@ -155,6 +172,6 @@ namespace Costs.Api.Test.Controllers.CostCategoriesControllerTests
             Assert.NotNull(notFoundResult);
             Assert.Equal(StatusCodes.Status404NotFound, notFoundResult.StatusCode);
         }
-    
+
     }
 }

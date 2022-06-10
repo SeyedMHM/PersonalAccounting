@@ -1,7 +1,6 @@
-﻿using AutoMapper;
-using Costs.Api.Controllers;
-using Costs.Application.CostCategoriesApplication.Queries.Common;
-using Costs.Application.CostCategoriesApplication.Queries.GetCostCategoryById;
+﻿using Costs.Api.Controllers;
+using Costs.Application.Features.CostCategoryFeatures.Queries.Common;
+using Costs.Application.Features.CostCategoryFeatures.Queries.GetCostCategoryById;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +28,7 @@ namespace Costs.Api.Test.Controllers.CostCategoriesControllerTests
 
 
         [Fact]
-        [Trait("CostCategory", "Get")]
+        [Trait("CostCategory", "CostCategoriesController")]
         public async Task When_Call_ActionMethod_Invoke_GetCostCategoryByIdQueryHandler_ExactlyOnce()
         {
             _mediator
@@ -43,7 +42,7 @@ namespace Costs.Api.Test.Controllers.CostCategoriesControllerTests
 
 
         [Fact]
-        [Trait("CostCategory", "Get")]
+        [Trait("CostCategory", "CostCategoriesController")]
         public async Task When_UnExsitingCostCategory_Return_Status404NotFound()
         {
             _mediator
@@ -60,15 +59,14 @@ namespace Costs.Api.Test.Controllers.CostCategoriesControllerTests
 
 
         [Fact]
-        [Trait("CostCategory", "Get")]
+        [Trait("CostCategory", "CostCategoriesController")]
         public async Task When_ExsitingCostCategory_Return_Status200OK()
         {
             _mediator
                 .Setup(q => q.Send(_getCostCategoryByIdQuery, CancellationToken.None))
                 .ReturnsAsync(new GetCostCategoryResponse()
                 {
-                    Id = 1,
-                    Title = "category A"
+                    Id = 1
                 });
 
             IActionResult result = await _costCategoriesController.Get(_getCostCategoryByIdQuery, CancellationToken.None);

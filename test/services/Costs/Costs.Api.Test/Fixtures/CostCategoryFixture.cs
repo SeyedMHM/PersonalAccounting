@@ -1,4 +1,4 @@
-﻿using Costs.Application.CostCategoriesApplication.Queries.Common;
+﻿using Costs.Application.Features.CostCategoryFeatures.Queries.Common;
 using System.Collections.Generic;
 using System.IO;
 using System.Text.Json;
