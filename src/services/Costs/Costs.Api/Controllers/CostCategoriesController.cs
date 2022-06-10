@@ -1,16 +1,15 @@
 ﻿using Costs.Api.Filters;
 using Costs.Application.Common.Models;
-using Costs.Application.CostCategoriesApplication.Commands.CreateCostCategory;
-using Costs.Application.CostCategoriesApplication.Queries.Common;
-using Costs.Application.CostCategoriesApplication.Queries.GetAllCostCategories;
-using Costs.Application.CostCategoriesApplication.Queries.GetCostCategoryById;
-using Costs.Application.CostCategoriesApplication.Queries.GetPagedCostCategories;
-using DeleteCostCategory = Costs.Application.CostCategoriesApplication.Commands.DeleteCostCategory;
+using Costs.Application.Features.CostCategoryFeatures.Commands.CreateCostCategory;
+using Costs.Application.Features.CostCategoryFeatures.Queries.Common;
+using Costs.Application.Features.CostCategoryFeatures.Queries.GetAllCostCategories;
+using Costs.Application.Features.CostCategoryFeatures.Queries.GetCostCategoryById;
+using Costs.Application.Features.CostCategoryFeatures.Queries.GetPagedCostCategories;
+using DeleteCostCategory = Costs.Application.Features.CostCategoryFeatures.Commands.DeleteCostCategory;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using AutoMapper;
-using Costs.Application.CostCategoriesApplication.Commands.DeleteCostCategory;
-using Costs.Application.CostCategoriesApplication.Commands.UpdateCostCategory;
+using Costs.Application.Features.CostCategoryFeatures.Commands.DeleteCostCategory;
+using Costs.Application.Features.CostCategoryFeatures.Commands.UpdateCostCategory;
 
 namespace Costs.Api.Controllers
 {
@@ -30,22 +29,9 @@ namespace Costs.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll([FromQuery] GetAllCostCategoriesQuery getAllCostCategoriesQuery, CancellationToken cancellationToken)
         {
-            PagedList<GetAllCostCategoriesQuery> b = new PagedList<GetAllCostCategoriesQuery>();
-            b.CurrentPage = 1;
-            b.TotalCount = int.MaxValue;
-            b.PageSize = 1;
-
-            PagedList<GetAllCostCategoriesQuery> a = new PagedList<GetAllCostCategoriesQuery>()
-            {
-                CurrentPage = 1,
-                TotalCount = int.MaxValue,
-                PageSize = 1,
-            };
-
-
             var categories = await _mediator.Send(getAllCostCategoriesQuery, cancellationToken);
 
-            if (categories == null || !categories.Any())
+            if (!categories.Any())
             {
                 return NotFound();
             }
@@ -103,21 +89,22 @@ namespace Costs.Api.Controllers
 
             return Ok(costCategory);
         }
-       
+
 
         [HttpDelete]
         public async Task<IActionResult> Delete(DeleteCostCategory.GetById.GetByIdCommand input, CancellationToken cancellationToken)
         {
             var costCategory = await _mediator.Send(input, cancellationToken);
-            
+
             if (costCategory is null)
             {
                 return NotFound();
             }
 
             await _mediator.Send(new DeleteCostCategoryCommand(costCategory.Id), cancellationToken);
-            
+
             return Ok();
         }
+
     }
 }

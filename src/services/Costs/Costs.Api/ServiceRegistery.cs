@@ -6,6 +6,8 @@ using Costs.Infrastructure.Data;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
+using Costs.Application.Services.CostCategoryAppServices;
+using Costs.Application.Services.CostCategoryAppServices.Queries;
 
 namespace Costs.Api
 {
@@ -34,12 +36,15 @@ namespace Costs.Api
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            builder.Services.AddAutoMapper(typeof(CostCategoryProfile));
+            //builder.Services.AddAutoMapper(typeof(CostCategoryProfile));
+            builder.Services.AddAutoMapper(typeof(ICostCategoryService).Assembly);
 
             builder.Services.AddMediatR(typeof(CreateCostCategoryCommand));
 
+            builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
 
-            builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+            builder.Services.AddScoped<ICostCategoryService, CostCategoryService>();
+            builder.Services.AddScoped<ICostCategoryValidatorService, CostCategoryValidatorService>();
 
 
             return builder.Services;

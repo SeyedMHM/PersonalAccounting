@@ -14,6 +14,7 @@ namespace Costs.Api.Middlewares
 
         public async Task Invoke(HttpContext context)
         {
+            ////using FluentResults
             //try
             //{
             //    await _next(context);
@@ -59,6 +60,8 @@ namespace Costs.Api.Middlewares
             //    context.Response.WriteAsync(resultString);
             //}
 
+
+            //using ApiResult
             try
             {
                 await _next(context);
